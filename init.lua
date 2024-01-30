@@ -197,7 +197,7 @@ require('lazy').setup({
     config = function()
       require('onedark').setup {
         -- Set a style preset. 'dark' is default.
-        style = 'dark', -- dark, darker, cool, deep, warm, warmer, light
+        style = 'deep', -- dark, darker, cool, deep, warm, warmer, light
       }
       require('onedark').load()
     end,
@@ -576,9 +576,9 @@ local servers = {
   -- clangd = {},
   -- gopls = {},
   -- pyright = {},
-  -- rust_analyzer = {},
-  -- tsserver = {},
-  -- html = { filetypes = { 'html', 'twig', 'hbs'} },
+  rust_analyzer = {},
+  tsserver = {},
+  html = { filetypes = { 'html', 'twig', 'hbs'} },
 
   lua_ls = {
     Lua = {
