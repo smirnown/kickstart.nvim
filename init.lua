@@ -421,6 +421,9 @@ vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc
 vim.keymap.set('n', '<leader>sG', ':LiveGrepGitRoot<cr>', { desc = '[S]earch by [G]rep on Git Root' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
+vim.keymap.set('n', '<leader>ls', ':LspRestart<CR>', { desc = 'Lsp Sync/Restart' })
+vim.keymap.set('n', '<leader>lx', ':LspStop<CR>', { desc = 'Lsp Stop' })
+vim.keymap.set('n', '<leader>p', '<C-^>', { desc = 'Goto previous buffer' })
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
@@ -577,7 +580,15 @@ local servers = {
   -- clangd = {},
   -- gopls = {},
   -- pyright = {},
-  rust_analyzer = {},
+  rust_analyzer = {
+    ['rust-analyzer'] = {
+      checkOnSave = {
+        command = 'clippy',
+        enable = true,
+        extraArgs = { '--target-dir', './rust-analyzer-target' },
+      }
+    },
+  },
   tsserver = {},
   volar = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
