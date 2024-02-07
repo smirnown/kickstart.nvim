@@ -76,6 +76,12 @@ require('lazy').setup({
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
 
+  -- Bracket mappings
+  'tpope/vim-unimpaired',
+
+  -- Easily manage surrounding items - e.g. quotes, html, xml, parens, etc.
+  'tpope/vim-surround',
+
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
   {
