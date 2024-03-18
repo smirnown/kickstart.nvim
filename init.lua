@@ -429,7 +429,7 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
 vim.keymap.set('n', '<leader>ls', ':LspRestart<CR>', { desc = 'Lsp Sync/Restart' })
 vim.keymap.set('n', '<leader>lx', ':LspStop<CR>', { desc = 'Lsp Stop' })
-vim.keymap.set('n', '<leader>p', '<C-^>', { desc = 'Goto previous buffer' })
+vim.keymap.set('n', '<leader>p', '<C-^>', { desc = 'Goto [P]revious buffer' })
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
