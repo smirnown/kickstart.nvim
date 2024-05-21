@@ -133,7 +133,7 @@ require('lazy').setup({
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
-        -- javascript = { { "prettierd", "prettier" } },
+        javascript = { { 'prettierd', 'prettier' } },
       },
     },
   },
@@ -616,7 +616,7 @@ require('mason-lspconfig').setup()
 --
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
-local mason_registry = require('mason-registry')
+local mason_registry = require 'mason-registry'
 local vue_language_server_path = mason_registry.get_package('vue-language-server'):get_install_path() .. '/node_modules/@vue/language-server'
 local servers = {
   rust_analyzer = {
@@ -625,7 +625,7 @@ local servers = {
         command = 'clippy',
         enable = true,
         extraArgs = { '--target-dir', './rust-analyzer-target' },
-      }
+      },
     },
   },
   tsserver = {
@@ -634,7 +634,7 @@ local servers = {
         {
           name = '@vue/typescript-plugin',
           location = vue_language_server_path,
-          languages = { 'vue' },
+          languages = { 'vue', 'typescript' },
         },
       },
     },
