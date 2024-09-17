@@ -160,6 +160,18 @@ require('lazy').setup({
     },
   },
 
+  -- Codeium - Free alternative to co-pilot
+  {
+    'Exafunction/codeium.nvim',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'hrsh7th/nvim-cmp',
+    },
+    config = function()
+      require('codeium').setup {}
+    end,
+  },
+
   -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim', opts = {} },
   {
@@ -716,6 +728,7 @@ cmp.setup {
     },
   },
   sources = {
+    { name = 'codeium' },
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
     { name = 'path' },
