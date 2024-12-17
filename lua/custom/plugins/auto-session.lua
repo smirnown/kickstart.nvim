@@ -19,5 +19,18 @@
 --     }
 --   end,
 -- }
-return {}
+return {
+  'rmagatti/auto-session',
+  lazy = false,
 
+  ---enables autocomplete for opts
+  ---@module "auto-session"
+  ---@type AutoSession.Config
+  opts = {
+    suppressed_dirs = { '~/', '~/Projects', '~/Downloads', '/' },
+    -- log_level = 'debug',
+  },
+  -- NOTE: On macos, I had to go into Terminal -> Settings -> Keyboard and select "Use Option as Meta key"
+  vim.keymap.set('n', '<M-f>', '<CMD>SessionSearch<CR>', { desc = 'Search sessions' }),
+  vim.keymap.set('n', '<M-s>', '<CMD>SessionSave<CR>', { desc = 'Save sessions' }),
+}
