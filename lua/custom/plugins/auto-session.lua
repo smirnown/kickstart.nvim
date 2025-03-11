@@ -28,9 +28,12 @@ return {
   ---@type AutoSession.Config
   opts = {
     suppressed_dirs = { '~/', '~/Projects', '~/Downloads', '/' },
+    auto_session_use_git_branch = true,
+    auto_save_enabled = false,
     -- log_level = 'debug',
   },
   -- NOTE: On macos, I had to go into Terminal -> Settings -> Keyboard and select "Use Option as Meta key"
-  vim.keymap.set('n', '<M-f>', '<CMD>SessionSearch<CR>', { desc = 'Search sessions' }),
-  vim.keymap.set('n', '<M-s>', '<CMD>SessionSave<CR>', { desc = 'Save sessions' }),
+  vim.keymap.set('n', '<M-o>', '<CMD>SessionSearch<CR>', { desc = 'Search sessions' }),
+  vim.keymap.set('n', '<M-s>', '<CMD>SessionSave<CR>', { desc = 'Save session' }),
+  vim.keymap.set('n', '<M-d>', '<CMD>SessionDelete<CR>', { desc = 'Delete session' }),
 }
