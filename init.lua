@@ -94,7 +94,7 @@ require('lazy').setup({
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim',       opts = {} },
+      { 'j-hui/fidget.nvim', opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
@@ -173,7 +173,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim',  opts = {} },
+  { 'folke/which-key.nvim', opts = {} },
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -639,8 +639,7 @@ require('mason-lspconfig').setup()
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
 local mason_registry = require 'mason-registry'
-local vue_language_server_path = mason_registry.get_package('vue-language-server'):get_install_path() ..
-    '/node_modules/@vue/language-server'
+local vue_language_server_path = mason_registry.get_package('vue-language-server'):get_install_path() .. '/node_modules/@vue/language-server'
 local servers = {
   rust_analyzer = {
     ['rust-analyzer'] = {
@@ -734,6 +733,50 @@ cmp.setup {
     { name = 'luasnip' },
     { name = 'path' },
   },
+}
+
+function _G.search_changed_files()
+  -- Get the list of changed files
+  local results = vim.fn.systemlist 'git diff --name-only master...HEAD'
+  -- Check if there are any results
+  if #results == 0 then
+    print 'No changed files found.'
+    return
+  end
+  -- Use Telescope to open the list of changed files
+  require('telescope.builtin').find_files {
+    prompt_title = 'Changed Files',
+    cwd = vim.loop.cwd(),
+    search_dirs = results,
+  }
+end
+
+function _G.populate_quickfix_with_changed_files()
+  -- Get the list of changed files with detailed stats
+  local results = vim.fn.systemlist 'git diff --numstat master...HEAD'
+  -- Check if there are any results
+  if #results == 0 then
+    print 'No changed files found.'
+    return
+  end
+  -- Create a list of quickfix items
+  local quickfix_list = {}
+  for _, line in ipairs(results) do
+    local added, deleted, file = line:match '(%d+)%s+(%d+)%s+(.+)'
+    if added and deleted and file then
+      local text = string.format('Added: %s, Deleted: %s', added, deleted)
+      table.insert(quickfix_list, { filename = file, text = text })
+    end
+  end
+  -- Set the quickfix list
+  vim.fn.setqflist(quickfix_list, 'r')
+  -- Open the quickfix window
+  vim.cmd 'copen'
+end
+
+require('which-key').register {
+  ['<leader>fc'] = { name = '[F]ind [C]hanged Files', _ = 'search_changed_files' },
+  ['<leader>gq'] = { name = '[G]et [Q]uickfix List For Changed Files', _ = 'populate_quickfix_with_changed_files' },
 }
 
 -- The line beneath this is called `modeline`. See `:help modeline`
