@@ -493,7 +493,7 @@ vim.keymap.set('n', '<leader>p', '<C-^>', { desc = 'Goto [P]revious buffer' })
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
     -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'go', 'lua', 'rust', 'javascript', 'typescript', 'bash', 'vue', 'graphql' },
+    ensure_installed = { 'go', 'lua', 'rust', 'javascript', 'typescript', 'bash', 'vue', 'graphql', 'python' },
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
@@ -672,6 +672,7 @@ local servers = {
     },
   },
   html = {},
+  pyright = {},
 }
 
 -- Setup neovim lua configuration
