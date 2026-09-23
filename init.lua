@@ -133,10 +133,10 @@ require('lazy').setup({
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
-        javascript = { 'prettier' },
-        vue = { 'prettier' },
-        json = { 'prettier' },
-        typescript = { 'prettier' },
+        javascript = { 'oxfmt' },
+        vue = { 'oxfmt' },
+        json = { 'oxfmt' },
+        typescript = { 'oxfmt' },
         scss = { 'trim_whitespace' },
         ['_'] = { 'trim_whitespace' },
       },
