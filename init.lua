@@ -160,18 +160,6 @@ require('lazy').setup({
     },
   },
 
-  -- Codeium - Free alternative to co-pilot
-  -- {
-  --   'Exafunction/codeium.nvim',
-  --   dependencies = {
-  --     'nvim-lua/plenary.nvim',
-  --     'hrsh7th/nvim-cmp',
-  --   },
-  --   config = function()
-  --     require('codeium').setup {}
-  --   end,
-  -- },
-
   -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim', opts = {} },
   {
@@ -481,8 +469,9 @@ vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc
 vim.keymap.set('n', '<leader>sG', ':LiveGrepGitRoot<cr>', { desc = '[S]earch by [G]rep on Git Root' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
-vim.keymap.set('n', '<leader>ls', ':LspRestart<CR>', { desc = 'Lsp Sync/Restart' })
-vim.keymap.set('n', '<leader>lx', ':LspStop<CR>', { desc = 'Lsp Stop' })
+vim.keymap.set('n', '<leader>le', ':lsp enable<CR>', { desc = 'Lsp Enable' })
+vim.keymap.set('n', '<leader>ls', ':lsp restart<CR>', { desc = 'Lsp Sync/Restart' })
+vim.keymap.set('n', '<leader>lx', ':lsp stop<CR>', { desc = 'Lsp Stop' })
 vim.keymap.set('n', '<leader>p', '<C-^>', { desc = 'Goto [P]revious buffer' })
 
 -- [[ Configure Treesitter ]]
@@ -560,51 +549,7 @@ vim.defer_fn(function()
 end, 0)
 
 -- [[ Configure LSP ]]
-
---  This function gets run when an LSP connects to a particular buffer.
--- local on_attach = function(_, bufnr)
---   -- NOTE: Remember that lua is a real programming language, and as such it is possible
---   -- to define small helper and utility functions so you don't have to repeat yourself
---   -- many times.
---   --
---   -- In this case, we create a function that lets us more easily define mappings specific
---   -- for LSP related items. It sets the mode, buffer and description for us each time.
---   local nmap = function(keys, func, desc)
---     if desc then
---       desc = 'LSP: ' .. desc
---     end
 --
---     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
---   end
---
---   nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
---   nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
---
---   nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
---   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
---   nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
---   nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
---   nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
---   nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
---
---   -- See `:help K` for why this keymap
---   nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
---   -- nmap('<C-h>', vim.lsp.buf.signature_help, 'Signature Documentation')
---
---   -- Lesser used LSP functionality
---   nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
---   nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
---   nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
---   nmap('<leader>wl', function()
---     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
---   end, '[W]orkspace [L]ist Folders')
---
---   -- Create a command `:Format` local to the LSP buffer
---   vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
---     vim.lsp.buf.format()
---   end, { desc = 'Format current buffer with LSP' })
--- end
-
 --  This function gets run when an LSP attaches to a particular buffer.
 --    That is to say, every time a new file is opened that is associated with
 --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
@@ -635,34 +580,36 @@ vim.api.nvim_create_autocmd('LspAttach', {
     --  For example, in C this would take you to the header.
     map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
+    map('grd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+
     -- The following two autocommands are used to highlight references of the
     -- word under your cursor when your cursor rests there for a little while.
     --    See `:help CursorHold` for information about when this is executed
     --
     -- When you move your cursor, the highlights will be cleared (the second autocommand).
     local client = vim.lsp.get_client_by_id(event.data.client_id)
-    if client and client:supports_method('textDocument/documentHighlight', event.buf) then
-      local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
-      vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
-        buffer = event.buf,
-        group = highlight_augroup,
-        callback = vim.lsp.buf.document_highlight,
-      })
-
-      vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
-        buffer = event.buf,
-        group = highlight_augroup,
-        callback = vim.lsp.buf.clear_references,
-      })
-
-      vim.api.nvim_create_autocmd('LspDetach', {
-        group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
-        callback = function(event2)
-          vim.lsp.buf.clear_references()
-          vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event2.buf }
-        end,
-      })
-    end
+    -- if client and client:supports_method('textDocument/documentHighlight', event.buf) then
+    --   local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
+    --   vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+    --     buffer = event.buf,
+    --     group = highlight_augroup,
+    --     callback = vim.lsp.buf.document_highlight,
+    --   })
+    --
+    --   vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+    --     buffer = event.buf,
+    --     group = highlight_augroup,
+    --     callback = vim.lsp.buf.clear_references,
+    --   })
+    --
+    --   vim.api.nvim_create_autocmd('LspDetach', {
+    --     group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
+    --     callback = function(event2)
+    --       vim.lsp.buf.clear_references()
+    --       vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event2.buf }
+    --     end,
+    --   })
+    -- end
 
     -- The following code creates a keymap to toggle inlay hints in your
     -- code, if the language server you are using supports them
