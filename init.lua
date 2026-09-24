@@ -313,9 +313,7 @@ require('lazy').setup({
   {
     -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
-    dependencies = {
-      'nvim-treesitter/nvim-treesitter-textobjects',
-    },
+    branch = 'main',
     build = ':TSUpdate',
   },
 
@@ -491,7 +489,7 @@ vim.keymap.set('n', '<leader>p', '<C-^>', { desc = 'Goto [P]revious buffer' })
 -- See `:help nvim-treesitter`
 -- Defer Treesitter setup after first render to improve startup time of 'nvim {filename}'
 vim.defer_fn(function()
-  require('nvim-treesitter.configs').setup {
+  require('nvim-treesitter').setup {
     -- Add languages to be installed here that you want installed for treesitter
     ensure_installed = { 'go', 'lua', 'rust', 'javascript', 'typescript', 'bash', 'vue', 'graphql', 'python' },
 
